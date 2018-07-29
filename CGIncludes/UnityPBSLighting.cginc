@@ -95,14 +95,15 @@ inline float4 LightingStandard_Deferred (SurfaceOutputStandard s, float3 viewDir
  //   half4 c = UNITY_BRDF_PBS (s.Albedo, specColor, oneMinusReflectivity, s.Smoothness, s.Normal, viewDir, gi.light, gi.indirect);
  //   float4 c = BRDF_Deferred (s.Albedo, specColor, oneMinusReflectivity, s.Smoothness, s.Normal, viewDir, gi.indirect);
     float3 c = (s.Albedo * gi.indirect.diffuse);
-    UnityStandardData data;
-    data.diffuseColor   = s.Albedo;
-    data.occlusion      = s.Occlusion;
-    data.specularColor  = specColor;
-    data.smoothness     = s.Smoothness;
-    data.normalWorld    = s.Normal;
 
-    UnityStandardDataToGbuffer(data, outGBuffer0, outGBuffer1, outGBuffer2);
+    // RT0: diffuse color (rgb), occlusion (a) - sRGB rendertarget
+    outGBuffer0 = half4(s.Albedo, s.Occlusion);
+
+    // RT1: spec color (rgb), smoothness (a) - sRGB rendertarget
+    outGBuffer1 = half4(specColor, s.Smoothness);
+
+    // RT2: normal (rgb), --unused, very low precision-- (a)
+    outGBuffer2 = half4(s.Normal * 0.5f + 0.5f, 0);
 
     float4 emission = float4(s.Emission, 1);
     emission.rgb += c;
