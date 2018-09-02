@@ -78,7 +78,7 @@ v2f vert (appdata v)
 
     // Perspective case
 #ifdef UNITY_STEREO_INSTANCING_ENABLED
-    o.ray = unity_StereoEyeIndex ? v.ray1 : v.ray0;
+    o.ray = unity_StereoEyeIndex == 0 ? v.ray0 : v.ray1;
 #else
     o.ray = v.ray;
 #endif
@@ -111,9 +111,9 @@ float4 unity_ShadowCascadeScales;
 // Keywords based defines
 //
 #if defined (SHADOWS_SPLIT_SPHERES)
-    #define GET_CASCADE_WEIGHTS(wpos, z)	getCascadeWeights_splitSpheres(wpos)
+    #define GET_CASCADE_WEIGHTS(wpos, z, dsqr)	getCascadeWeights_splitSpheres(wpos, dsqr) 
 #else
-    #define GET_CASCADE_WEIGHTS(wpos, z)    getCascadeWeights( wpos, z )
+    #define GET_CASCADE_WEIGHTS(wpos, z, dsqr)    getCascadeWeights( wpos, z )
 #endif
 
 #if defined (SHADOWS_SINGLE_CASCADE)
@@ -126,11 +126,11 @@ float4 unity_ShadowCascadeScales;
  * Gets the cascade weights based on the world position of the fragment.
  * Returns a float4 with only one component set that corresponds to the appropriate cascade.
  */
-inline half4 getCascadeWeights(float3 wpos, float z)
+inline fixed4 getCascadeWeights(float3 wpos, float z)
 {
-    half4 zNear = float4( z >= _LightSplitsNear );
-    half4 zFar = float4( z < _LightSplitsFar );
-    half4 weights = zNear * zFar;
+    fixed4 zNear = float4( z >= _LightSplitsNear );
+    fixed4 zFar = float4( z < _LightSplitsFar );
+    fixed4 weights = zNear * zFar;
     return weights;
 }
 
@@ -138,14 +138,14 @@ inline half4 getCascadeWeights(float3 wpos, float z)
  * Gets the cascade weights based on the world position of the fragment and the poisitions of the split spheres for each cascade.
  * Returns a float4 with only one component set that corresponds to the appropriate cascade.
  */
-inline half4 getCascadeWeights_splitSpheres(float3 wpos)
+inline fixed4 getCascadeWeights_splitSpheres(float3 wpos, out float4 dsqr)
 {
     float3 fromCenter0 = wpos.xyz - unity_ShadowSplitSpheres[0].xyz;
     float3 fromCenter1 = wpos.xyz - unity_ShadowSplitSpheres[1].xyz;
     float3 fromCenter2 = wpos.xyz - unity_ShadowSplitSpheres[2].xyz;
     float3 fromCenter3 = wpos.xyz - unity_ShadowSplitSpheres[3].xyz;
-    float4 distances2 = float4(dot(fromCenter0,fromCenter0), dot(fromCenter1,fromCenter1), dot(fromCenter2,fromCenter2), dot(fromCenter3,fromCenter3));
-    half4 weights = float4(distances2 < unity_ShadowSplitSqRadii);
+    dsqr = float4(dot(fromCenter0,fromCenter0), dot(fromCenter1,fromCenter1), dot(fromCenter2,fromCenter2), dot(fromCenter3,fromCenter3));
+    fixed4 weights = float4(dsqr < unity_ShadowSplitSqRadii);
     weights.yzw = saturate(weights.yzw - weights.xyz);
     return weights;
 }
@@ -154,7 +154,7 @@ inline half4 getCascadeWeights_splitSpheres(float3 wpos)
  * Returns the shadowmap coordinates for the given fragment based on the world position and z-depth.
  * These coordinates belong to the shadowmap atlas that contains the maps for all cascades.
  */
-inline float4 getShadowCoord( float4 wpos, half4 cascadeWeights )
+inline float4 getShadowCoord( float4 wpos, fixed4 cascadeWeights )
 {
     float3 sc0 = mul (unity_WorldToShadow[0], wpos).xyz;
     float3 sc1 = mul (unity_WorldToShadow[1], wpos).xyz;
@@ -246,7 +246,7 @@ uniform float PCSS_POISSON_SAMPLING_NOISE_DIR = 1.0;
 #define PCSS_CAN_USE_EARLY_BAILOUT_OPTIMIZATION_DIR
 #endif
 
-#if UNITY_VERSION > 565 && defined(PCSS_PCSS_FILTER_DIR) && (SHADER_TARGET >= 35)
+#if UNITY_VERSION > 565 && defined(PCSS_PCSS_FILTER_DIR) && (SHADER_TARGET >= 35) && !defined(SHADER_API_GLCORE)
 SamplerState my_point_clamp_smp2;
 #define PCSS_CAN_USE_PCSS_FILTER_DIR
 #endif
@@ -445,8 +445,8 @@ float3 DirPoissonDisksOffsets[64];
 //Returns projected value between 0 and 1
 inline float DirRandValue01(float3 seed)
 {
-   float dt = dot(seed, float3(12.9898,78.233,45.5432) * _Time.xyz);// project seed on random constant vector   
-   return frac(sin(dt) * 43758.5453);// return only fractional part
+   float dt = dot(seed, float3(12.9898,78.233,45.5432) + _Time.xyz);// project seed on random constant vector   
+   return frac(sin(dt + _Time.w) * 43758.5453);// return only fractional part
 }
 
 //Scales the value
@@ -630,7 +630,7 @@ float PCSS_Main(float4 coords, float3 receiverPlaneDepthBias, float c, float s)
 	return shadow;
 }
 //Soft shadow
-half4 frag_pcfSoft(v2f i) : SV_Target
+fixed4 frag_pcfSoft(v2f i) : SV_Target
 {
 	//Return one if you want only ContactShadows, keep in mind that the cascaded depth are still rendered
 	//return 1.0;
@@ -650,7 +650,9 @@ half4 frag_pcfSoft(v2f i) : SV_Target
     wpos = mul(unity_CameraToWorld, float4(vpos,1));
 #endif
 	
-	half4 cascadeWeights = GET_CASCADE_WEIGHTS(wpos, vpos.z);//linear
+	float4 dsqr;
+    fixed4 cascadeWeights = GET_CASCADE_WEIGHTS(wpos, vpos.z, dsqr);
+	//fixed4 cascadeWeights = GET_CASCADE_WEIGHTS(wpos, vpos.z);//linear
     float4 coord = GET_SHADOW_COORDINATES(wpos, cascadeWeights);
 
     float3 receiverPlaneDepthBias = 0.0;
@@ -711,18 +713,19 @@ half4 frag_pcfSoft(v2f i) : SV_Target
     float3 fromCenter2 = wpos.xyz - unity_ShadowSplitSpheres[2].xyz;
     float3 fromCenter3 = wpos.xyz - unity_ShadowSplitSpheres[3].xyz;
     float4 distances2 = float4(dot(fromCenter0,fromCenter0), dot(fromCenter1,fromCenter1), dot(fromCenter2,fromCenter2), dot(fromCenter3,fromCenter3));
-    //half4 weights = float4(distances2 < unity_ShadowSplitSqRadii);
+    //fixed4 weights = float4(distances2 < unity_ShadowSplitSqRadii);
     //weights.yzw = saturate(weights.yzw - weights.xyz);	
 	//-----------------------------------------
 	//distances2 -= unity_ShadowSplitSqRadii;
 	//distances2.yzw = saturate(distances2.yzw - distances2.xyz);
 	*/	
-	
+	/*
 	float dist2 = dot(vpos,vpos);
 	float4 _LightSplitsNear2 = _LightSplitsNear*_LightSplitsNear;
 	float4 _LightSplitsFar2 = _LightSplitsFar*_LightSplitsFar;
 	half4 z4 = (dist2.xxxx - _LightSplitsNear2) / (_LightSplitsFar2 - _LightSplitsNear2);
 	half alpha = dot(z4 * cascadeWeights, half4(1, 1, 1, 1));
+	*/
 	/*
 	float dist = length(vpos);
 	half4 z4 = (dist.xxxx - _LightSplitsNear) / (_LightSplitsFar - _LightSplitsNear);
@@ -730,13 +733,18 @@ half4 frag_pcfSoft(v2f i) : SV_Target
 	*/
 	//first one
 	//half z4 = (dist - _LightSplitsNear[0]) / (_LightSplitsFar[0] - _LightSplitsNear[0]);
-	//half alpha = dot(z4.xxxx * cascadeWeights[0].xxxx, half4(1, 1, 1, 1));	
+	//half alpha = dot(z4.xxxx * cascadeWeights[0].xxxx, half4(1, 1, 1, 1));
+	float3 wdir = wpos - _WorldSpaceCameraPos;
+    half4 z4 = dsqr / unity_ShadowSplitSqRadii.xyzw;
+    z4 = ( unity_ShadowSplitSqRadii > 0 ) ? z4.xyzw : ( 0 ).xxxx;
+    z4 *= dsqr < dot( wdir, wdir ).xxxx;
+	
 #else
 	half4 z4 = (float4(vpos.z, vpos.z, vpos.z, vpos.z) - _LightSplitsNear) / (_LightSplitsFar - _LightSplitsNear);
-	half alpha = dot(z4 * cascadeWeights, half4(1, 1, 1, 1));
-#endif
 	
-	alpha = saturate(alpha);
+#endif
+	half alpha = dot(z4 * cascadeWeights, half4(1, 1, 1, 1));
+	//alpha = saturate(alpha);
 		
 	UNITY_BRANCH
 	if (alpha > 1.0 - PCSS_CASCADE_BLEND_DISTANCE)
@@ -745,19 +753,21 @@ half4 frag_pcfSoft(v2f i) : SV_Target
 		alpha = (alpha - (1.0 - PCSS_CASCADE_BLEND_DISTANCE)) / PCSS_CASCADE_BLEND_DISTANCE;
 
 		// sample next cascade
-		cascadeWeights = half4(0, cascadeWeights.xyz);
+		cascadeWeights = fixed4(0, cascadeWeights.xyz);
 		coord = GET_SHADOW_COORDINATES(wpos, cascadeWeights);
 
 #if defined(PCSS_USE_RECEIVER_PLANE_BIAS)
-		biasMultiply = dot(cascadeWeights, unity_ShadowCascadeScales);
+		float3 coordCascade0 = getShadowCoord_SingleCascade(wpos);
+		float biasMultiply = dot(cascadeWeights, unity_ShadowCascadeScales);
 		receiverPlaneDepthBias = UnityGetReceiverPlaneDepthBiasPCSS(coordCascade0.xyz, biasMultiply);
 #endif
 
 		//half shadowNextCascade = UnitySampleShadowmap_PCF3x3(coord, receiverPlaneDepthBias);
 		half shadowNextCascade = PCSS_Main(coord, receiverPlaneDepthBias, c, s);
-
+	
 	#if UNITY_VERSION > 565
-		shadow = lerp(shadow, min(shadow, shadowNextCascade), alpha);//saturate(alpha)
+		//shadow = lerp(shadow, min(shadow, shadowNextCascade), alpha);//saturate(alpha)
+		shadow = lerp(shadow, shadowNextCascade, alpha);
 	#else
 		shadow = lerp(shadow, shadowNextCascade, alpha);//saturate(alpha)
 	#endif
@@ -769,7 +779,7 @@ half4 frag_pcfSoft(v2f i) : SV_Target
 	return shadow + _LightShadowData.r;
 }
 //Hard shadow
-half4 frag_hard (v2f i) : SV_Target
+fixed4 frag_hard (v2f i) : SV_Target
 {
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i); // required for sampling the correct slice of the shadow map render texture array
     float4 wpos;
@@ -783,15 +793,17 @@ half4 frag_hard (v2f i) : SV_Target
     vpos = computeCameraSpacePosFromDepth(i);
     wpos = mul (unity_CameraToWorld, float4(vpos,1));
 #endif
-    half4 cascadeWeights = GET_CASCADE_WEIGHTS (wpos, vpos.z);
+    float4 dsqr;
+    fixed4 cascadeWeights = GET_CASCADE_WEIGHTS(wpos, vpos.z, dsqr);
+	//fixed4 cascadeWeights = GET_CASCADE_WEIGHTS (wpos, vpos.z);
     float4 shadowCoord = GET_SHADOW_COORDINATES(wpos, cascadeWeights);
 
     //1 tap hard shadow
-    half shadow = UNITY_SAMPLE_SHADOW(_ShadowMapTexture, shadowCoord);
+    fixed shadow = UNITY_SAMPLE_SHADOW(_ShadowMapTexture, shadowCoord);
     //shadow = lerp(_LightShadowData.r, 1.0, shadow);
 	shadow += _LightShadowData.r;
 
-    half4 res = shadow;
+    fixed4 res = shadow;
     return res;
 }
 ENDCG

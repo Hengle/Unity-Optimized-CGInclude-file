@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
+
+[RequireComponent(typeof(Light))]
 [ExecuteInEditMode()]
 public class PCSS_Directional : MonoBehaviour
 {
@@ -87,7 +89,7 @@ public class PCSS_Directional : MonoBehaviour
         }
 
         Init();
-        VariableInit();
+        UpdateShadow();
     }
 
     void Init()
@@ -101,6 +103,9 @@ public class PCSS_Directional : MonoBehaviour
             //QualitySettings.shadowCascade4Split = new Vector3(0.1f, 0.275f, 0.5f);
             GraphicsSettings.SetShaderMode(BuiltinShaderType.ScreenSpaceShadows, BuiltinShaderMode.UseCustom);
             GraphicsSettings.SetCustomShader(BuiltinShaderType.ScreenSpaceShadows, Shader.Find("Hidden/PCSS_Directional"));//Shader.Find can sometimes return null in Player builds (careful).
+#if UNITY_2017_OR_NEWER
+
+#endif
             isGraphicSet = true;
         }
 
@@ -115,9 +120,14 @@ public class PCSS_Directional : MonoBehaviour
         return (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Direct3D9 || SystemInfo.graphicsDeviceType == GraphicsDeviceType.OpenGLES2 || SystemInfo.graphicsDeviceType == GraphicsDeviceType.PlayStationMobile || SystemInfo.graphicsDeviceType == GraphicsDeviceType.PlayStationVita || SystemInfo.graphicsDeviceType == GraphicsDeviceType.N3DS);
 #endif
     }
+#if UNITY_EDITOR
+    private void Update()
+    {
+        UpdateShadow();
+    }
+#endif
 
-
-    void VariableInit()
+    void UpdateShadow()
     {
         //if (BIAS_FADE) { Shader.EnableKeyword("PCSS_USE_BIAS_FADE_DIR"); Shader.SetGlobalFloat("PCSS_BIAS_FADE_DIR", BIAS_FADE_VALUE * 0.001f); } else { Shader.DisableKeyword("PCSS_USE_BIAS_FADE_DIR"); }
         if (NOISE_STATIC) { Shader.EnableKeyword("PCSS_NOISE_STATIC_DIR"); } else { Shader.DisableKeyword("PCSS_NOISE_STATIC_DIR"); }
