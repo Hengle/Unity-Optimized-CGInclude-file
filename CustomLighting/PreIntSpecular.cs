@@ -5,7 +5,7 @@ using UnityEngine;
 public class PreIntSpecular : MonoBehaviour
 {
     private static int _PreintegratedLUT = Shader.PropertyToID("_PreintegratedLUT");
-    Texture2D preintIBL = null;
+    static Texture2D preintIBL = null;
 #if UNITY_EDITOR
     private void Update()
 #else
