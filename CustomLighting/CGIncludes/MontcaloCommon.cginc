@@ -1,3 +1,5 @@
+#ifndef MONTCALO
+#define MONTCALO
 #define PI 3.1415926
 inline float Square(float x)
 {
@@ -212,3 +214,4 @@ float MISWeight(uint Num, float PDF, uint OtherNum, float OtherPDF) {
 	float OtherWeight = OtherNum * OtherPDF;
 	return Weight * Weight / (Weight * Weight + OtherWeight * OtherWeight);
 }
+#endif

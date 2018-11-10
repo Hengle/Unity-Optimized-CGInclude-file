@@ -1,3 +1,5 @@
+#ifndef BSDFCOMMON
+#define BSDFCOMMON
 #include "MontcaloCommon.cginc"
 
 //////////Diffuse BRDF
@@ -8,14 +10,14 @@ float Lambert(float NoL) {
 float LambertPi(float NoL) {
 	return 0.3183098 * NoL;
 }
-
+#define POW5(x) x*x*x*x*x
 float BurleyBRDF(float NoL, float NoV, float LoH, float roughness) {
     half FD90 = 0.5 + 2 * LoH * LoH * roughness;
-    float NoL_Pow5 = Pow5(1 - NoL);
-    float NoV_Pow5 = Pow5(1 - NoV);
+    float NoL_Pow5 = POW5(1 - NoL);
+    float NoV_Pow5 = POW5(1 - NoV);
     return (1 + (FD90 - 1) * NoL_Pow5) * (1 + (FD90 - 1) * NoV_Pow5) * NoL;
 }
-
+#undef POW5
 //////////Cotton Cloth BRDF
 float Inverse_GGX(float NoH, float Roughness) {
 	float a2 = Roughness * Roughness;
@@ -256,3 +258,4 @@ half PreintegratedGF_Mobile_Nonmetal(half Roughness, half NoV) {
 	half2 r = Roughness * c0 + c1;
 	return min( r.x * r.x, exp2( -9.28 * NoV ) ) * r.x + r.y;
 }
+#endif

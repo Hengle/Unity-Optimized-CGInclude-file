@@ -10,7 +10,7 @@
 
 #if (UNITY_VERSION >= 2017)
 #define unityShadowCoord float
-#define unityShadowCoord2 float2
+#define unityShadowCoord2 half2
 #define unityShadowCoord3 float3
 #define unityShadowCoord4 float4
 #define unityShadowCoord4x4 float4x4
@@ -58,188 +58,188 @@ uniform sampler2D unity_RandomRotation16;
 #if defined(POISSON_64) || defined(POISSON_128)
 static const float Shadow_Coef = 0.016;
 static const float Samplers_Count = 64;
-static const float2 PoissonDisks[64] =
+static const half2 PoissonDisks[64] =
 {
-	float2 (0.1187053, 0.7951565),
-	float2 (0.1173675, 0.6087878),
-	float2 (-0.09958518, 0.7248842),
-	float2 (0.4259812, 0.6152718),
-	float2 (0.3723574, 0.8892787),
-	float2 (-0.02289676, 0.9972908),
-	float2 (-0.08234791, 0.5048386),
-	float2 (0.1821235, 0.9673787),
-	float2 (-0.2137264, 0.9011746),
-	float2 (0.3115066, 0.4205415),
-	float2 (0.1216329, 0.383266),
-	float2 (0.5948939, 0.7594361),
-	float2 (0.7576465, 0.5336417),
-	float2 (-0.521125, 0.7599803),
-	float2 (-0.2923127, 0.6545699),
-	float2 (0.6782473, 0.22385),
-	float2 (-0.3077152, 0.4697627),
-	float2 (0.4484913, 0.2619455),
-	float2 (-0.5308799, 0.4998215),
-	float2 (-0.7379634, 0.5304936),
-	float2 (0.02613133, 0.1764302),
-	float2 (-0.1461073, 0.3047384),
-	float2 (-0.8451027, 0.3249073),
-	float2 (-0.4507707, 0.2101997),
-	float2 (-0.6137282, 0.3283674),
-	float2 (-0.2385868, 0.08716244),
-	float2 (0.3386548, 0.01528411),
-	float2 (-0.04230833, -0.1494652),
-	float2 (0.167115, -0.1098648),
-	float2 (-0.525606, 0.01572019),
-	float2 (-0.7966855, 0.1318727),
-	float2 (0.5704287, 0.4778273),
-	float2 (-0.9516637, 0.002725032),
-	float2 (-0.7068223, -0.1572321),
-	float2 (0.2173306, -0.3494083),
-	float2 (0.06100426, -0.4492816),
-	float2 (0.2333982, 0.2247189),
-	float2 (0.07270987, -0.6396734),
-	float2 (0.4670808, -0.2324669),
-	float2 (0.3729528, -0.512625),
-	float2 (0.5675077, -0.4054544),
-	float2 (-0.3691984, -0.128435),
-	float2 (0.8752473, 0.2256988),
-	float2 (-0.2680127, -0.4684393),
-	float2 (-0.1177551, -0.7205751),
-	float2 (-0.1270121, -0.3105424),
-	float2 (0.5595394, -0.06309237),
-	float2 (-0.9299136, -0.1870008),
-	float2 (0.974674, 0.03677348),
-	float2 (0.7726735, -0.06944724),
-	float2 (-0.4995361, -0.3663749),
-	float2 (0.6474168, -0.2315787),
-	float2 (0.1911449, -0.8858921),
-	float2 (0.3671001, -0.7970535),
-	float2 (-0.6970353, -0.4449432),
-	float2 (-0.417599, -0.7189326),
-	float2 (-0.5584748, -0.6026504),
-	float2 (-0.02624448, -0.9141423),
-	float2 (0.565636, -0.6585149),
-	float2 (-0.874976, -0.3997879),
-	float2 (0.9177843, -0.2110524),
-	float2 (0.8156927, -0.3969557),
-	float2 (-0.2833054, -0.8395444),
-	float2 (0.799141, -0.5886372)
+	half2 (0.1187053, 0.7951565),
+	half2 (0.1173675, 0.6087878),
+	half2 (-0.09958518, 0.7248842),
+	half2 (0.4259812, 0.6152718),
+	half2 (0.3723574, 0.8892787),
+	half2 (-0.02289676, 0.9972908),
+	half2 (-0.08234791, 0.5048386),
+	half2 (0.1821235, 0.9673787),
+	half2 (-0.2137264, 0.9011746),
+	half2 (0.3115066, 0.4205415),
+	half2 (0.1216329, 0.383266),
+	half2 (0.5948939, 0.7594361),
+	half2 (0.7576465, 0.5336417),
+	half2 (-0.521125, 0.7599803),
+	half2 (-0.2923127, 0.6545699),
+	half2 (0.6782473, 0.22385),
+	half2 (-0.3077152, 0.4697627),
+	half2 (0.4484913, 0.2619455),
+	half2 (-0.5308799, 0.4998215),
+	half2 (-0.7379634, 0.5304936),
+	half2 (0.02613133, 0.1764302),
+	half2 (-0.1461073, 0.3047384),
+	half2 (-0.8451027, 0.3249073),
+	half2 (-0.4507707, 0.2101997),
+	half2 (-0.6137282, 0.3283674),
+	half2 (-0.2385868, 0.08716244),
+	half2 (0.3386548, 0.01528411),
+	half2 (-0.04230833, -0.1494652),
+	half2 (0.167115, -0.1098648),
+	half2 (-0.525606, 0.01572019),
+	half2 (-0.7966855, 0.1318727),
+	half2 (0.5704287, 0.4778273),
+	half2 (-0.9516637, 0.002725032),
+	half2 (-0.7068223, -0.1572321),
+	half2 (0.2173306, -0.3494083),
+	half2 (0.06100426, -0.4492816),
+	half2 (0.2333982, 0.2247189),
+	half2 (0.07270987, -0.6396734),
+	half2 (0.4670808, -0.2324669),
+	half2 (0.3729528, -0.512625),
+	half2 (0.5675077, -0.4054544),
+	half2 (-0.3691984, -0.128435),
+	half2 (0.8752473, 0.2256988),
+	half2 (-0.2680127, -0.4684393),
+	half2 (-0.1177551, -0.7205751),
+	half2 (-0.1270121, -0.3105424),
+	half2 (0.5595394, -0.06309237),
+	half2 (-0.9299136, -0.1870008),
+	half2 (0.974674, 0.03677348),
+	half2 (0.7726735, -0.06944724),
+	half2 (-0.4995361, -0.3663749),
+	half2 (0.6474168, -0.2315787),
+	half2 (0.1911449, -0.8858921),
+	half2 (0.3671001, -0.7970535),
+	half2 (-0.6970353, -0.4449432),
+	half2 (-0.417599, -0.7189326),
+	half2 (-0.5584748, -0.6026504),
+	half2 (-0.02624448, -0.9141423),
+	half2 (0.565636, -0.6585149),
+	half2 (-0.874976, -0.3997879),
+	half2 (0.9177843, -0.2110524),
+	half2 (0.8156927, -0.3969557),
+	half2 (-0.2833054, -0.8395444),
+	half2 (0.799141, -0.5886372)
 };
 
 #elif defined(POISSON_32)
 static const float Shadow_Coef = 0.031;
 static const float Samplers_Count = 32;
-static const float2 PoissonDisks[32] =
+static const half2 PoissonDisks[32] =
 {
-	float2 (0.4873902, -0.8569599),
-	float2 (0.3463737, -0.3387939),
-	float2 (0.6290055, -0.4735314),
-	float2 (0.1855854, -0.8848142),
-	float2 (0.7677917, 0.02691162),
-	float2 (0.3009142, -0.6365873),
-	float2 (0.4268422, -0.006137629),
-	float2 (-0.06682982, -0.7833805),
-	float2 (0.0347263, -0.3994124),
-	float2 (0.4494694, 0.5206614),
-	float2 (0.219377, 0.2438844),
-	float2 (0.1285765, -0.1215554),
-	float2 (0.8907049, 0.4334931),
-	float2 (0.2556469, 0.766552),
-	float2 (-0.03692406, 0.3629236),
-	float2 (0.6651103, 0.7286811),
-	float2 (-0.429309, -0.2282262),
-	float2 (-0.2730969, -0.4683513),
-	float2 (-0.2755986, 0.7327913),
-	float2 (-0.3329705, 0.1754638),
-	float2 (-0.1731326, -0.1087716),
-	float2 (0.9212226, -0.3716638),
-	float2 (-0.5388235, 0.4603968),
-	float2 (-0.6307321, 0.7615924),
-	float2 (-0.7709175, -0.08894937),
-	float2 (-0.7205971, -0.3609493),
-	float2 (-0.5386202, -0.5847159),
-	float2 (-0.6520834, 0.1785284),
-	float2 (-0.9310582, 0.2040343),
-	float2 (-0.828178, 0.5559599),
-	float2 (0.6297836, 0.2946501),
-	float2 (-0.05836084, 0.9006807)
+	half2 (0.4873902, -0.8569599),
+	half2 (0.3463737, -0.3387939),
+	half2 (0.6290055, -0.4735314),
+	half2 (0.1855854, -0.8848142),
+	half2 (0.7677917, 0.02691162),
+	half2 (0.3009142, -0.6365873),
+	half2 (0.4268422, -0.006137629),
+	half2 (-0.06682982, -0.7833805),
+	half2 (0.0347263, -0.3994124),
+	half2 (0.4494694, 0.5206614),
+	half2 (0.219377, 0.2438844),
+	half2 (0.1285765, -0.1215554),
+	half2 (0.8907049, 0.4334931),
+	half2 (0.2556469, 0.766552),
+	half2 (-0.03692406, 0.3629236),
+	half2 (0.6651103, 0.7286811),
+	half2 (-0.429309, -0.2282262),
+	half2 (-0.2730969, -0.4683513),
+	half2 (-0.2755986, 0.7327913),
+	half2 (-0.3329705, 0.1754638),
+	half2 (-0.1731326, -0.1087716),
+	half2 (0.9212226, -0.3716638),
+	half2 (-0.5388235, 0.4603968),
+	half2 (-0.6307321, 0.7615924),
+	half2 (-0.7709175, -0.08894937),
+	half2 (-0.7205971, -0.3609493),
+	half2 (-0.5386202, -0.5847159),
+	half2 (-0.6520834, 0.1785284),
+	half2 (-0.9310582, 0.2040343),
+	half2 (-0.828178, 0.5559599),
+	half2 (0.6297836, 0.2946501),
+	half2 (-0.05836084, 0.9006807)
 };
 
 #elif defined(POISSON_25)
 static const float Shadow_Coef = 0.04;
 static const float Samplers_Count = 25;
-static const float2 PoissonDisks[25] =
+static const half2 PoissonDisks[25] =
 {
-	float2 (-0.6351818f, 0.2172711f),
-	float2 (-0.1499606f, 0.2320675f),
-	float2 (-0.67978f, 0.6884924f),
-	float2 (-0.7758647f, -0.253409f),
-	float2 (-0.4731916f, -0.2832723f),
-	float2 (-0.3330079f, 0.6430059f),
-	float2 (-0.1384151f, -0.09830225f),
-	float2 (-0.8182327f, -0.5645939f),
-	float2 (-0.9198472f, 0.06549802f),
-	float2 (-0.1422085f, -0.4872109f),
-	float2 (-0.4980833f, -0.5885599f),
-	float2 (-0.3326159f, -0.8496148f),
-	float2 (0.3066736f, -0.1401997f),
-	float2 (0.1148317f, 0.374455f),
-	float2 (-0.0388568f, 0.8071329f),
-	float2 (0.4102885f, 0.6960295f),
-	float2 (0.5563877f, 0.3375377f),
-	float2 (-0.01786576f, -0.8873765f),
-	float2 (0.234991f, -0.4558438f),
-	float2 (0.6206775f, -0.1551005f),
-	float2 (0.6640642f, -0.5691427f),
-	float2 (0.7312726f, 0.5830168f),
-	float2 (0.8879707f, 0.05715213f),
-	float2 (0.3128296f, -0.830803f),
-	float2 (0.8689764f, -0.3397973f)
+	half2 (-0.6351818f, 0.2172711f),
+	half2 (-0.1499606f, 0.2320675f),
+	half2 (-0.67978f, 0.6884924f),
+	half2 (-0.7758647f, -0.253409f),
+	half2 (-0.4731916f, -0.2832723f),
+	half2 (-0.3330079f, 0.6430059f),
+	half2 (-0.1384151f, -0.09830225f),
+	half2 (-0.8182327f, -0.5645939f),
+	half2 (-0.9198472f, 0.06549802f),
+	half2 (-0.1422085f, -0.4872109f),
+	half2 (-0.4980833f, -0.5885599f),
+	half2 (-0.3326159f, -0.8496148f),
+	half2 (0.3066736f, -0.1401997f),
+	half2 (0.1148317f, 0.374455f),
+	half2 (-0.0388568f, 0.8071329f),
+	half2 (0.4102885f, 0.6960295f),
+	half2 (0.5563877f, 0.3375377f),
+	half2 (-0.01786576f, -0.8873765f),
+	half2 (0.234991f, -0.4558438f),
+	half2 (0.6206775f, -0.1551005f),
+	half2 (0.6640642f, -0.5691427f),
+	half2 (0.7312726f, 0.5830168f),
+	half2 (0.8879707f, 0.05715213f),
+	half2 (0.3128296f, -0.830803f),
+	half2 (0.8689764f, -0.3397973f)
 };
 
 #else
 static const float Samplers_Count = 16;
 static const float Shadow_Coef = 0.063;
-static const float2 PoissonDisks[16] =
+static const half2 PoissonDisks[16] =
 {
-	float2(0.1232981, -0.03923375),
-	float2(-0.5625377, -0.3602428),
-	float2(0.6403719, 0.06821123),
-	float2(0.2813387, -0.5881588),
-	float2(-0.5731218, 0.2700572),
-	float2(0.2033166, 0.4197739),
-	float2(0.8467958, -0.3545584),
-	float2(-0.4230451, -0.797441),
-	float2(0.7190253, 0.5693575),
-	float2(0.03815468, -0.9914171),
-	float2(-0.2236265, 0.5028614),
-	float2(0.1722254, 0.983663),
-	float2(-0.2912464, 0.8980512),
-	float2(-0.8984148, -0.08762786),
-	float2(-0.6995085, 0.6734185),
-	float2(-0.293196, -0.06289119)
+	half2(0.1232981, -0.03923375),
+	half2(-0.5625377, -0.3602428),
+	half2(0.6403719, 0.06821123),
+	half2(0.2813387, -0.5881588),
+	half2(-0.5731218, 0.2700572),
+	half2(0.2033166, 0.4197739),
+	half2(0.8467958, -0.3545584),
+	half2(-0.4230451, -0.797441),
+	half2(0.7190253, 0.5693575),
+	half2(0.03815468, -0.9914171),
+	half2(-0.2236265, 0.5028614),
+	half2(0.1722254, 0.983663),
+	half2(-0.2912464, 0.8980512),
+	half2(-0.8984148, -0.08762786),
+	half2(-0.6995085, 0.6734185),
+	half2(-0.293196, -0.06289119)
 };
 
 #endif
 
-static const float2 PoissonDisksTest[16] =
+static const half2 PoissonDisksTest[16] =
 {
-	float2(0.1232981, -0.03923375),
-	float2(-0.5625377, -0.3602428),
-	float2(0.6403719, 0.06821123),
-	float2(0.2813387, -0.5881588),
-	float2(-0.5731218, 0.2700572),
-	float2(0.2033166, 0.4197739),
-	float2(0.8467958, -0.3545584),
-	float2(-0.4230451, -0.797441),
-	float2(0.7190253, 0.5693575),
-	float2(0.03815468, -0.9914171),
-	float2(-0.2236265, 0.5028614),
-	float2(0.1722254, 0.983663),
-	float2(-0.2912464, 0.8980512),
-	float2(-0.8984148, -0.08762786),
-	float2(-0.6995085, 0.6734185),
-	float2(-0.293196, -0.06289119)
+	half2(0.1232981, -0.03923375),
+	half2(-0.5625377, -0.3602428),
+	half2(0.6403719, 0.06821123),
+	half2(0.2813387, -0.5881588),
+	half2(-0.5731218, 0.2700572),
+	half2(0.2033166, 0.4197739),
+	half2(0.8467958, -0.3545584),
+	half2(-0.4230451, -0.797441),
+	half2(0.7190253, 0.5693575),
+	half2(0.03815468, -0.9914171),
+	half2(-0.2236265, 0.5028614),
+	half2(0.1722254, 0.983663),
+	half2(-0.2912464, 0.8980512),
+	half2(-0.8984148, -0.08762786),
+	half2(-0.6995085, 0.6734185),
+	half2(-0.293196, -0.06289119)
 };
 
 //Will help store temporary rotations
@@ -269,9 +269,9 @@ float LocalRandAngle(float3 seed)
 	return LocalRand01(seed) * NGSS_POISSON_SAMPLING_NOISE;
 }
 
-float LocalRandAngle2(float2 seed)
+float LocalRandAngle2(half2 seed)
 {
-	float dt = dot(seed, float2(12.9898, 78.233));// project seed on random constant vector   
+	float dt = dot(seed, half2(12.9898, 78.233));// project seed on random constant vector   
 	float frc = frac(sin(dt) * 43758.5453);// get only fractional part
 	return frc * NGSS_POISSON_SAMPLING_NOISE;
 }
@@ -309,7 +309,7 @@ float3 LocalRandDir(float3 seed)
     #endif
 	
 	#if defined (NGSS_CAN_USE_PCSS_FILTER)
-	float2 BLOCKER_SEARCH_SPOT(float4 coord, float diskRadius, float c, float s)
+	half2 BLOCKER_SEARCH_SPOT(float4 coord, float diskRadius, float c, float s)
 	{
 		//BLOCKER SEARCH	
 		float blockerCount = 0;
@@ -318,9 +318,9 @@ float3 LocalRandDir(float3 seed)
 		for (int i = 0; i < 16; ++i)
 		{
 	#if defined(NGSS_USE_POISSON_SAMPLING)
-			float2 rotatedOffset = float2(PoissonDisksTest[i].x * c + PoissonDisksTest[i].y * s, PoissonDisksTest[i].x * -s + PoissonDisksTest[i].y * c) * diskRadius;
+			half2 rotatedOffset = half2(PoissonDisksTest[i].x * c + PoissonDisksTest[i].y * s, PoissonDisksTest[i].x * -s + PoissonDisksTest[i].y * c) * diskRadius;
 	#else
-			float2 rotatedOffset = PoissonDisksTest[i] * diskRadius;
+			half2 rotatedOffset = PoissonDisksTest[i] * diskRadius;
 	#endif
 			
 	#if defined (SHADOWS_NATIVE)
@@ -350,7 +350,7 @@ float3 LocalRandDir(float3 seed)
 		
 		}
 
-		return float2(avgBlockerDistance / blockerCount, blockerCount);
+		return half2(avgBlockerDistance / blockerCount, blockerCount);
 	}
 	#endif//NGSS_CAN_USE_PCSS_FILTER
 	
@@ -362,9 +362,9 @@ float3 LocalRandDir(float3 seed)
 		{
 		
 	#if defined(NGSS_USE_POISSON_SAMPLING)
-			float2 rotatedOffset = float2(PoissonDisksTest[i].x * c + PoissonDisksTest[i].y * s, PoissonDisksTest[i].x * -s + PoissonDisksTest[i].y * c) * diskRadius;
+			half2 rotatedOffset = half2(PoissonDisksTest[i].x * c + PoissonDisksTest[i].y * s, PoissonDisksTest[i].x * -s + PoissonDisksTest[i].y * c) * diskRadius;
 	#else
-			float2 rotatedOffset = PoissonDisksTest[i] * diskRadius;
+			half2 rotatedOffset = PoissonDisksTest[i] * diskRadius;
 	#endif
 
 	#if defined (SHADOWS_NATIVE)
@@ -386,9 +386,9 @@ float3 LocalRandDir(float3 seed)
 		{
 		
 	#if defined(NGSS_USE_POISSON_SAMPLING)
-			float2 rotatedOffset = float2(PoissonDisks[i].x * c + PoissonDisks[i].y * s, PoissonDisks[i].x * -s + PoissonDisks[i].y * c) * diskRadius;
+			half2 rotatedOffset = half2(PoissonDisks[i].x * c + PoissonDisks[i].y * s, PoissonDisks[i].x * -s + PoissonDisks[i].y * c) * diskRadius;
 	#else
-			float2 rotatedOffset = PoissonDisks[i] * diskRadius;
+			half2 rotatedOffset = PoissonDisks[i] * diskRadius;
 	#endif
 
 	#if defined (SHADOWS_NATIVE)
@@ -447,7 +447,7 @@ float3 LocalRandDir(float3 seed)
 		
 		diskRadius *= 0.05;
 		
-		float2 distances = BLOCKER_SEARCH_SPOT(coord, diskRadius, c, s);
+		half2 distances = BLOCKER_SEARCH_SPOT(coord, diskRadius, c, s);
 		 
 		#if defined(NGSS_USE_EARLY_BAILOUT_OPTIMIZATION)
 		if( distances.y == 0.0 )//There are no occluders so early out (this saves filtering)
@@ -822,7 +822,7 @@ half4 LPPV_SampleProbeOcclusion(float3 worldPos)
 
 // ------------------------------------------------------------------
 // Used by the forward rendering path
-fixed UnitySampleBakedOcclusion (float2 lightmapUV, float3 worldPos)
+fixed UnitySampleBakedOcclusion (half2 lightmapUV, float3 worldPos)
 {
     #if defined (SHADOWS_SHADOWMASK)
         #if defined(LIGHTMAP_ON)
@@ -863,7 +863,7 @@ fixed UnitySampleBakedOcclusion (float2 lightmapUV, float3 worldPos)
 
 // ------------------------------------------------------------------
 // Used by the deferred rendering path (in the gbuffer pass)
-fixed4 UnityGetRawBakedOcclusions(float2 lightmapUV, float3 worldPos)
+fixed4 UnityGetRawBakedOcclusions(half2 lightmapUV, float3 worldPos)
 {
     #if defined (SHADOWS_SHADOWMASK)
         #if defined(LIGHTMAP_ON)
@@ -1004,7 +1004,7 @@ float3 UnityGetReceiverPlaneDepthBias(float3 shadowCoord, float biasMultiply)
 * Combines the different components of a shadow coordinate and returns the final coordinate.
 * See UnityGetReceiverPlaneDepthBias
 */
-float3 UnityCombineShadowcoordComponents(float2 baseUV, float2 deltaUV, float depth, float3 receiverPlaneDepthBias)
+float3 UnityCombineShadowcoordComponents(half2 baseUV, half2 deltaUV, float depth, float3 receiverPlaneDepthBias)
 {
     float3 uv = float3(baseUV + deltaUV, depth + receiverPlaneDepthBias.z);
     uv.z += dot(deltaUV, receiverPlaneDepthBias.xy);
@@ -1139,18 +1139,18 @@ half UnitySampleShadowmap_PCF3x3NoHardwareSupport(float4 coord, float3 receiverP
 #ifdef SHADOWMAPSAMPLER_AND_TEXELSIZE_DEFINED
     // when we don't have hardware PCF sampling, then the above 5x5 optimized PCF really does not work.
     // Fallback to a simple 3x3 sampling with averaged results.
-    float2 base_uv = coord.xy;
-    float2 ts = _ShadowMapTexture_TexelSize.xy;
+    half2 base_uv = coord.xy;
+    half2 ts = _ShadowMapTexture_TexelSize.xy;
     shadow = 0;
-    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(-ts.x, -ts.y), coord.z, receiverPlaneDepthBias));
-    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(0, -ts.y), coord.z, receiverPlaneDepthBias));
-    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(ts.x, -ts.y), coord.z, receiverPlaneDepthBias));
-    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(-ts.x, 0), coord.z, receiverPlaneDepthBias));
-    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(0, 0), coord.z, receiverPlaneDepthBias));
-    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(ts.x, 0), coord.z, receiverPlaneDepthBias));
-    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(-ts.x, ts.y), coord.z, receiverPlaneDepthBias));
-    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(0, ts.y), coord.z, receiverPlaneDepthBias));
-    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(ts.x, ts.y), coord.z, receiverPlaneDepthBias));
+    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(-ts.x, -ts.y), coord.z, receiverPlaneDepthBias));
+    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(0, -ts.y), coord.z, receiverPlaneDepthBias));
+    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(ts.x, -ts.y), coord.z, receiverPlaneDepthBias));
+    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(-ts.x, 0), coord.z, receiverPlaneDepthBias));
+    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(0, 0), coord.z, receiverPlaneDepthBias));
+    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(ts.x, 0), coord.z, receiverPlaneDepthBias));
+    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(-ts.x, ts.y), coord.z, receiverPlaneDepthBias));
+    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(0, ts.y), coord.z, receiverPlaneDepthBias));
+    shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(ts.x, ts.y), coord.z, receiverPlaneDepthBias));
     shadow /= 9.0;
 #endif
 
@@ -1172,9 +1172,9 @@ half UnitySampleShadowmap_PCF3x3Tent(float4 coord, float3 receiverPlaneDepthBias
     #endif
 
     // tent base is 3x3 base thus covering from 9 to 12 texels, thus we need 4 bilinear PCF fetches
-    float2 tentCenterInTexelSpace = coord.xy * _ShadowMapTexture_TexelSize.zw;
-    float2 centerOfFetchesInTexelSpace = floor(tentCenterInTexelSpace + 0.5);
-    float2 offsetFromTentCenterToCenterOfFetches = tentCenterInTexelSpace - centerOfFetchesInTexelSpace;
+    half2 tentCenterInTexelSpace = coord.xy * _ShadowMapTexture_TexelSize.zw;
+    half2 centerOfFetchesInTexelSpace = floor(tentCenterInTexelSpace + 0.5);
+    half2 offsetFromTentCenterToCenterOfFetches = tentCenterInTexelSpace - centerOfFetchesInTexelSpace;
 
     // find the weight of each texel based
     float4 texelsWeightsU, texelsWeightsV;
@@ -1182,21 +1182,21 @@ half UnitySampleShadowmap_PCF3x3Tent(float4 coord, float3 receiverPlaneDepthBias
     _UnityInternalGetWeightPerTexel_3TexelsWideTriangleFilter(offsetFromTentCenterToCenterOfFetches.y, texelsWeightsV);
 
     // each fetch will cover a group of 2x2 texels, the weight of each group is the sum of the weights of the texels
-    float2 fetchesWeightsU = texelsWeightsU.xz + texelsWeightsU.yw;
-    float2 fetchesWeightsV = texelsWeightsV.xz + texelsWeightsV.yw;
+    half2 fetchesWeightsU = texelsWeightsU.xz + texelsWeightsU.yw;
+    half2 fetchesWeightsV = texelsWeightsV.xz + texelsWeightsV.yw;
 
     // move the PCF bilinear fetches to respect texels weights
-    float2 fetchesOffsetsU = texelsWeightsU.yw / fetchesWeightsU.xy + float2(-1.5,0.5);
-    float2 fetchesOffsetsV = texelsWeightsV.yw / fetchesWeightsV.xy + float2(-1.5,0.5);
+    half2 fetchesOffsetsU = texelsWeightsU.yw / fetchesWeightsU.xy + half2(-1.5,0.5);
+    half2 fetchesOffsetsV = texelsWeightsV.yw / fetchesWeightsV.xy + half2(-1.5,0.5);
     fetchesOffsetsU *= _ShadowMapTexture_TexelSize.xx;
     fetchesOffsetsV *= _ShadowMapTexture_TexelSize.yy;
 
     // fetch !
-    float2 bilinearFetchOrigin = centerOfFetchesInTexelSpace * _ShadowMapTexture_TexelSize.xy;
-    shadow =  fetchesWeightsU.x * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.y * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.x * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.y * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
+    half2 bilinearFetchOrigin = centerOfFetchesInTexelSpace * _ShadowMapTexture_TexelSize.xy;
+    shadow =  fetchesWeightsU.x * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.x, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.y * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.y, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.x * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.x, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.y * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.y, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
 #endif
 
     return shadow;
@@ -1217,9 +1217,9 @@ half UnitySampleShadowmap_PCF5x5Tent(float4 coord, float3 receiverPlaneDepthBias
     #endif
 
     // tent base is 5x5 base thus covering from 25 to 36 texels, thus we need 9 bilinear PCF fetches
-    float2 tentCenterInTexelSpace = coord.xy * _ShadowMapTexture_TexelSize.zw;
-    float2 centerOfFetchesInTexelSpace = floor(tentCenterInTexelSpace + 0.5);
-    float2 offsetFromTentCenterToCenterOfFetches = tentCenterInTexelSpace - centerOfFetchesInTexelSpace;
+    half2 tentCenterInTexelSpace = coord.xy * _ShadowMapTexture_TexelSize.zw;
+    half2 centerOfFetchesInTexelSpace = floor(tentCenterInTexelSpace + 0.5);
+    half2 offsetFromTentCenterToCenterOfFetches = tentCenterInTexelSpace - centerOfFetchesInTexelSpace;
 
     // find the weight of each texel based on the area of a 45 degree slop tent above each of them.
     float3 texelsWeightsU_A, texelsWeightsU_B;
@@ -1238,16 +1238,16 @@ half UnitySampleShadowmap_PCF5x5Tent(float4 coord, float3 receiverPlaneDepthBias
     fetchesOffsetsV *= _ShadowMapTexture_TexelSize.yyy;
 
     // fetch !
-    float2 bilinearFetchOrigin = centerOfFetchesInTexelSpace * _ShadowMapTexture_TexelSize.xy;
-    shadow  = fetchesWeightsU.x * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.y * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.z * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.z, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.x * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.y * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.z * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.z, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.x * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.y * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.z * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.z, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
+    half2 bilinearFetchOrigin = centerOfFetchesInTexelSpace * _ShadowMapTexture_TexelSize.xy;
+    shadow  = fetchesWeightsU.x * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.x, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.y * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.y, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.z * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.z, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.x * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.x, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.y * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.y, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.z * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.z, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.x * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.x, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.y * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.y, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.z * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.z, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
 #endif
 
     return shadow;
@@ -1268,9 +1268,9 @@ half UnitySampleShadowmap_PCF7x7Tent(float4 coord, float3 receiverPlaneDepthBias
     #endif
 
     // tent base is 7x7 base thus covering from 49 to 64 texels, thus we need 16 bilinear PCF fetches
-    float2 tentCenterInTexelSpace = coord.xy * _ShadowMapTexture_TexelSize.zw;
-    float2 centerOfFetchesInTexelSpace = floor(tentCenterInTexelSpace + 0.5);
-    float2 offsetFromTentCenterToCenterOfFetches = tentCenterInTexelSpace - centerOfFetchesInTexelSpace;
+    half2 tentCenterInTexelSpace = coord.xy * _ShadowMapTexture_TexelSize.zw;
+    half2 centerOfFetchesInTexelSpace = floor(tentCenterInTexelSpace + 0.5);
+    half2 offsetFromTentCenterToCenterOfFetches = tentCenterInTexelSpace - centerOfFetchesInTexelSpace;
 
     // find the weight of each texel based on the area of a 45 degree slop tent above each of them.
     float4 texelsWeightsU_A, texelsWeightsU_B;
@@ -1289,23 +1289,23 @@ half UnitySampleShadowmap_PCF7x7Tent(float4 coord, float3 receiverPlaneDepthBias
     fetchesOffsetsV *= _ShadowMapTexture_TexelSize.yyyy;
 
     // fetch !
-    float2 bilinearFetchOrigin = centerOfFetchesInTexelSpace * _ShadowMapTexture_TexelSize.xy;
-    shadow  = fetchesWeightsU.x * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.y * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.z * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.z, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.w * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.w, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.x * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.y * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.z * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.z, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.w * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.w, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.x * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.y * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.z * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.z, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.w * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.w, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.x * fetchesWeightsV.w * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.w), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.y * fetchesWeightsV.w * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.w), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.z * fetchesWeightsV.w * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.z, fetchesOffsetsV.w), coord.z, receiverPlaneDepthBias));
-    shadow += fetchesWeightsU.w * fetchesWeightsV.w * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.w, fetchesOffsetsV.w), coord.z, receiverPlaneDepthBias));
+    half2 bilinearFetchOrigin = centerOfFetchesInTexelSpace * _ShadowMapTexture_TexelSize.xy;
+    shadow  = fetchesWeightsU.x * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.x, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.y * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.y, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.z * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.z, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.w * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.w, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.x * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.x, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.y * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.y, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.z * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.z, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.w * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.w, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.x * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.x, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.y * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.y, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.z * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.z, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.w * fetchesWeightsV.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.w, fetchesOffsetsV.z), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.x * fetchesWeightsV.w * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.x, fetchesOffsetsV.w), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.y * fetchesWeightsV.w * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.y, fetchesOffsetsV.w), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.z * fetchesWeightsV.w * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.z, fetchesOffsetsV.w), coord.z, receiverPlaneDepthBias));
+    shadow += fetchesWeightsU.w * fetchesWeightsV.w * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, half2(fetchesOffsetsU.w, fetchesOffsetsV.w), coord.z, receiverPlaneDepthBias));
 #endif
 
     return shadow;
@@ -1328,25 +1328,25 @@ half UnitySampleShadowmap_PCF3x3Gaussian(float4 coord, float3 receiverPlaneDepth
         return UnitySampleShadowmap_PCF3x3NoHardwareSupport(coord, receiverPlaneDepthBias);
     #endif
 
-    const float2 offset = float2(0.5, 0.5);
-    float2 uv = (coord.xy * _ShadowMapTexture_TexelSize.zw) + offset;
-    float2 base_uv = (floor(uv) - offset) * _ShadowMapTexture_TexelSize.xy;
-    float2 st = frac(uv);
+    const half2 offset = half2(0.5, 0.5);
+    half2 uv = (coord.xy * _ShadowMapTexture_TexelSize.zw) + offset;
+    half2 base_uv = (floor(uv) - offset) * _ShadowMapTexture_TexelSize.xy;
+    half2 st = frac(uv);
 
-    float2 uw = float2(3 - 2 * st.x, 1 + 2 * st.x);
-    float2 u = float2((2 - st.x) / uw.x - 1, (st.x) / uw.y + 1);
+    half2 uw = half2(3 - 2 * st.x, 1 + 2 * st.x);
+    half2 u = half2((2 - st.x) / uw.x - 1, (st.x) / uw.y + 1);
     u *= _ShadowMapTexture_TexelSize.x;
 
-    float2 vw = float2(3 - 2 * st.y, 1 + 2 * st.y);
-    float2 v = float2((2 - st.y) / vw.x - 1, (st.y) / vw.y + 1);
+    half2 vw = half2(3 - 2 * st.y, 1 + 2 * st.y);
+    half2 v = half2((2 - st.y) / vw.x - 1, (st.y) / vw.y + 1);
     v *= _ShadowMapTexture_TexelSize.y;
 
     half sum = 0;
 
-    sum += uw[0] * vw[0] * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u[0], v[0]), coord.z, receiverPlaneDepthBias));
-    sum += uw[1] * vw[0] * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u[1], v[0]), coord.z, receiverPlaneDepthBias));
-    sum += uw[0] * vw[1] * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u[0], v[1]), coord.z, receiverPlaneDepthBias));
-    sum += uw[1] * vw[1] * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u[1], v[1]), coord.z, receiverPlaneDepthBias));
+    sum += uw[0] * vw[0] * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u[0], v[0]), coord.z, receiverPlaneDepthBias));
+    sum += uw[1] * vw[0] * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u[1], v[0]), coord.z, receiverPlaneDepthBias));
+    sum += uw[0] * vw[1] * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u[0], v[1]), coord.z, receiverPlaneDepthBias));
+    sum += uw[1] * vw[1] * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u[1], v[1]), coord.z, receiverPlaneDepthBias));
 
     shadow = sum / 16.0f;
 #endif
@@ -1371,10 +1371,10 @@ half UnitySampleShadowmap_PCF5x5Gaussian(float4 coord, float3 receiverPlaneDepth
         return UnitySampleShadowmap_PCF3x3NoHardwareSupport(coord, receiverPlaneDepthBias);
     #endif
 
-    const float2 offset = float2(0.5, 0.5);
-    float2 uv = (coord.xy * _ShadowMapTexture_TexelSize.zw) + offset;
-    float2 base_uv = (floor(uv) - offset) * _ShadowMapTexture_TexelSize.xy;
-    float2 st = frac(uv);
+    const half2 offset = half2(0.5, 0.5);
+    half2 uv = (coord.xy * _ShadowMapTexture_TexelSize.zw) + offset;
+    half2 base_uv = (floor(uv) - offset) * _ShadowMapTexture_TexelSize.xy;
+    half2 st = frac(uv);
 
     float3 uw = float3(4 - 3 * st.x, 7, 1 + 3 * st.x);
     float3 u = float3((3 - 2 * st.x) / uw.x - 2, (3 + st.x) / uw.y, st.x / uw.z + 2);
@@ -1387,19 +1387,19 @@ half UnitySampleShadowmap_PCF5x5Gaussian(float4 coord, float3 receiverPlaneDepth
     half sum = 0.0f;
 
     half3 accum = uw * vw.x;
-    sum += accum.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.x, v.x), coord.z, receiverPlaneDepthBias));
-    sum += accum.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.y, v.x), coord.z, receiverPlaneDepthBias));
-    sum += accum.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.z, v.x), coord.z, receiverPlaneDepthBias));
+    sum += accum.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u.x, v.x), coord.z, receiverPlaneDepthBias));
+    sum += accum.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u.y, v.x), coord.z, receiverPlaneDepthBias));
+    sum += accum.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u.z, v.x), coord.z, receiverPlaneDepthBias));
 
     accum = uw * vw.y;
-    sum += accum.x *  UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.x, v.y), coord.z, receiverPlaneDepthBias));
-    sum += accum.y *  UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.y, v.y), coord.z, receiverPlaneDepthBias));
-    sum += accum.z *  UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.z, v.y), coord.z, receiverPlaneDepthBias));
+    sum += accum.x *  UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u.x, v.y), coord.z, receiverPlaneDepthBias));
+    sum += accum.y *  UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u.y, v.y), coord.z, receiverPlaneDepthBias));
+    sum += accum.z *  UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u.z, v.y), coord.z, receiverPlaneDepthBias));
 
     accum = uw * vw.z;
-    sum += accum.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.x, v.z), coord.z, receiverPlaneDepthBias));
-    sum += accum.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.y, v.z), coord.z, receiverPlaneDepthBias));
-    sum += accum.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.z, v.z), coord.z, receiverPlaneDepthBias));
+    sum += accum.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u.x, v.z), coord.z, receiverPlaneDepthBias));
+    sum += accum.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u.y, v.z), coord.z, receiverPlaneDepthBias));
+    sum += accum.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, half2(u.z, v.z), coord.z, receiverPlaneDepthBias));
     shadow = sum / 144.0f;
 
 #endif

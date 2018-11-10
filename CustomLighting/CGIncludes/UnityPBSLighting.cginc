@@ -1,3 +1,5 @@
+#ifndef PBSLIGHTING
+#define PBSLIGHTING
 #ifndef UNITY_PBS_LIGHTING_INCLUDED
 #define UNITY_PBS_LIGHTING_INCLUDED
 #include "UnityShaderVariables.cginc"
@@ -193,3 +195,4 @@ inline void LightingStandardSpecular_GI (
 }
 
 #endif // UNITY_PBS_LIGHTING_INCLUDED
+#endif
